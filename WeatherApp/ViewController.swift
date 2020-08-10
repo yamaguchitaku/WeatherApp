@@ -24,8 +24,8 @@ class ViewController: UIViewController, XMLParserDelegate {
     @IBAction func TapButton(_ sender: Any) {
         //関数getDataの実行処理
         getData()
-//    Label.text = rainfallZero
-//        print(rainfallZero)
+        Label.text = rainfallZero
+        print(rainfallZero)
     }
     //関数 getData を作成
     func getData() {
@@ -33,48 +33,48 @@ class ViewController: UIViewController, XMLParserDelegate {
         let request = URLRequest(url: url)
         let task = URLSession.shared.dataTask(with: request,
         completionHandler: { (data, response, error) in
-            let parser: XMLParser? = XMLParser(data: data!)
-            parser!.delegate = self
-            parser!.parse()
-            print(parser!)
+        let parser: XMLParser? = XMLParser(data: data!)
+        parser!.delegate = self
+        parser!.parse()
+        print(parser!)
         })
         //タスク開始
         task.resume()
     }
     //解析開始
-        func parserDidStartDocument(_ parser: XMLParser) {
-        }
-        //解析　要素の開始時
-        func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
-            check_element = elementName
-        }
-        //解析　要素内の値取得
-        func parser(_ parser: XMLParser, foundCharacters string: String) {
-            if string != "\n" {
-                if check_element == "Rainfall" {
-                    //要素がRainfallの場合値を取得する
-                    rainfallArray.append(string)
-//                    print(rainfallArray)
-                }
-            }
-        }
-        //解析　要素の終了時
-        func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
+    func parserDidStartDocument(_ parser: XMLParser) {
+    }
+    //解析　要素の開始時
+    func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
+        check_element = elementName
+    }
+    //解析　要素内の値取得
+    func parser(_ parser: XMLParser, foundCharacters string: String) {
+        if string != "\n" {
             if check_element == "Rainfall" {
-                var rainfallTotal = rainfallArray[0]
-                print(rainfallTotal)
-                for i in 1..<rainfallArray.count {
-                    //rainfallの値が複数取得された場合一つにまとめる
-                rainfallTotal = rainfallTotal + rainfallArray[i]
-                }
-//               print(rainfallTotal)
+                //要素がRainfallの場合値を取得する
+                rainfallArray.append(string)
+                print(rainfallArray)
             }
         }
-        //    解析　終了時
-        func parserDidEndDocument(_ parser: XMLParser) {
+    }
+    //解析　要素の終了時
+    func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
+        if check_element == "Rainfall" {
+            var rainfallTotal = rainfallArray[0]
+            //                print(rainfallTotal)
+            for i in 1..<rainfallArray.count {
+                //rainfallの値が複数取得された場合一つにまとめる
+                rainfallTotal = rainfallTotal + rainfallArray[i]
+            }
+            //               print(rainfallTotal)
         }
-        //解析_エラー発生時
-        func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
-            print("エラー:" + parseError.localizedDescription)
+    }
+    //    解析　終了時
+    func parserDidEndDocument(_ parser: XMLParser) {
+    }
+    //解析_エラー発生時
+    func parser(_ parser: XMLParser, parseErrorOccurred parseError: Error) {
+        print("エラー:" + parseError.localizedDescription)
     }
 }
