@@ -11,6 +11,10 @@ import UIKit
 class ViewController: UIViewController, XMLParserDelegate {
     @IBOutlet weak var ImageView: UIImageView!
     @IBOutlet weak var Label: UILabel!
+//画像
+    var imgAmetokasa = UIImage(named: "ametokasa")
+    var imgKasatatamu = UIImage(named: "kasatatamu")
+    var imgAmedosyaburi = UIImage(named: "amedosyaburi")
     // 空の配列
     var rainfallArray = [String]()
     // 空の変数
@@ -18,14 +22,29 @@ class ViewController: UIViewController, XMLParserDelegate {
     var rainfallZero: String!
     override func viewDidLoad() {
         super.viewDidLoad()
+//        画面が読み込まれた時
+        getData()
         // Do any additional setup after loading the view.
     }
     
     @IBAction func TapButton(_ sender: Any) {
-        //関数getDataの実行処理
-        getData()
-        Label.text = rainfallZero
-        print(rainfallZero)
+//ボタンをタップした時に配列rainfallArrayの要素0番目を取得して出力する
+        print(rainfallArray[0])
+//rainfallArray[0]をstring型からfloat型に変換する
+        let rainNum1: String = rainfallArray[0]
+        let nsstring: NSString = NSString(string: rainNum1)
+        let rainNum2: Float = nsstring.floatValue
+       print(rainNum2)
+        if (rainNum2 >= 0.01 && rainNum2 <= 0.2) {
+            ImageView.image = imgAmetokasa
+            Label.text = String(rainNum2)
+        } else if rainNum2 > 0.2 {
+            ImageView.image = imgAmedosyaburi
+            Label.text = String(rainNum2)
+        } else {
+            ImageView.image = imgKasatatamu
+            Label.text = String(rainNum2)
+        }
     }
     //関数 getData を作成
     func getData() {
@@ -36,7 +55,7 @@ class ViewController: UIViewController, XMLParserDelegate {
         let parser: XMLParser? = XMLParser(data: data!)
         parser!.delegate = self
         parser!.parse()
-        print(parser!)
+//        print(parser!)
         })
         //タスク開始
         task.resume()
@@ -54,7 +73,7 @@ class ViewController: UIViewController, XMLParserDelegate {
             if check_element == "Rainfall" {
                 //要素がRainfallの場合値を取得する
                 rainfallArray.append(string)
-                print(rainfallArray)
+//                print(rainfallArray)
             }
         }
     }
